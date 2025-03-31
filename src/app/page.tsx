@@ -117,7 +117,7 @@ export default function Home() {
           }
         });
         
-        // Converter o objeto em um array e pegar os primeiros 6 dias
+        // Converter o objeto em um array e pegar os primeiros 5 dias
         const dailyForecastArray = Object.values(dailyForecasts)
           .sort((a, b) => a.date.localeCompare(b.date)); // Ordenar por data crescente
         
@@ -156,7 +156,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-900 to-purple-600 text-white">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8 max-w-6xl">
         <h1 className="text-4xl font-bold text-center mb-2">Previsão do Tempo</h1>
        
         <div className="max-w-md mx-auto mb-2">
@@ -165,7 +165,7 @@ export default function Home() {
 
         <div className="flex flex-col md:flex-row gap-6 justify-center">
           {/* Coluna da esquerda: clima atual e previsão */}
-          <div className="w-full md:w-2/3">
+          <div className="w-full md:w-2/3 max-w-3xl mx-auto">
             {/* Estado de carregamento */}
             {loading && (
               <div className="bg-white/20 backdrop-blur-lg rounded-xl p-6 shadow-lg mb-6 text-center">
@@ -201,10 +201,10 @@ export default function Home() {
               <div className="bg-white/20 backdrop-blur-lg rounded-xl p-4 shadow-lg">
                 <h2 className="text-2xl font-bold mb-4 uppercase">Próximos dias</h2>
                 <div className="flex justify-center overflow-x-auto pb-2 md:overflow-visible">
-                  <div className="flex gap-3 min-w-max">
+                  <div className="flex gap-3 min-w-max justify-center">
                     {forecast.map((item) => (
-                      <div 
-                        key={item.date} 
+                      <div
+                        key={item.date}
                         className="bg-white/10 rounded-2xl p-3 text-center hover:bg-white/20 transition-colors w-[140px] shadow-lg border border-white/10 backdrop-blur-sm"
                       >
                         <p className="font-semibold text-sm">{formatDate(item.date)}</p>
@@ -228,7 +228,7 @@ export default function Home() {
           </div>
 
           {/* Coluna da direita: histórico de pesquisas */}
-          <div className="w-full md:w-1/3">
+          <div className="w-full md:w-1/3 max-w-md mx-auto">
             <CityList
               cities={weather ? [{
                 name: weather.name,
