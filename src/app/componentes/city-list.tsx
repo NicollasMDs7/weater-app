@@ -55,7 +55,7 @@ export default function CityList({ cities, onCityClick }: CityListProps) {
         history.map((city, index) => (
           <div
             key={index}
-            className={"bg-white/10 rounded-lg p-2 mb-1 flex items-center hover:bg-white/20 transition-colors cursor-pointer"}
+            className={"bg-white/10 rounded-lg p-2 mb-2 flex items-center hover:bg-white/20 transition-colors cursor-pointer"}
             onClick={() => onCityClick && onCityClick(city.name)}
           >
             <img
