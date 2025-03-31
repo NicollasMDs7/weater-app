@@ -121,7 +121,7 @@ export default function Home() {
         const dailyForecastArray = Object.values(dailyForecasts)
           .sort((a, b) => a.date.localeCompare(b.date)); // Ordenar por data crescente
         
-        setForecast(dailyForecastArray.slice(0, 6));
+        setForecast(dailyForecastArray.slice(1, 6));
       }
     } catch (error) {
       console.error("Erro ao buscar dados do clima:", error);
