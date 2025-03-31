@@ -75,7 +75,7 @@ export default function Home() {
       const data = await getWeatherByCity(city);
       setWeather(data);
 
-      // Obter a previsão para os próximos 5 dias (excluindo o dia atual)
+      // Obter a previsão para os próximos dias (excluindo o dia atual)
       const forecastData = await getForecastByCity(city);
       if (forecastData) {
         // Obter a data atual para comparação
@@ -117,9 +117,11 @@ export default function Home() {
           }
         });
         
-        // Converter o objeto em um array e pegar os primeiros 5 dias
-        const dailyForecastArray = Object.values(dailyForecasts);
-        setForecast(dailyForecastArray.slice(0, 5));
+        // Converter o objeto em um array e pegar os primeiros 6 dias
+        const dailyForecastArray = Object.values(dailyForecasts)
+          .sort((a, b) => a.date.localeCompare(b.date)); // Ordenar por data crescente
+        
+        setForecast(dailyForecastArray.slice(0, 6));
       }
     } catch (error) {
       console.error("Erro ao buscar dados do clima:", error);
@@ -194,27 +196,32 @@ export default function Home() {
               </div>
             )}
 
-            {/* Exibir previsão para os próximos 5 dias */}
+            {/* Exibir previsão para os próximos dias */}
             {!loading && forecast.length > 0 && (
               <div className="bg-white/20 backdrop-blur-lg rounded-xl p-4 shadow-lg">
-                <h2 className="text-2xl font-bold mb-4">Próximos 5 dias</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-                  {forecast.map((item) => (
-                    <div key={item.date} className="bg-white/10 rounded-lg p-4 text-center hover:bg-white/20 transition-colors">
-                      <p className="font-semibold">{formatDate(item.date)}</p>
-                      {item.icon && (
-                        <img
-                          src={`https://openweathermap.org/img/wn/${item.icon}@2x.png`}
-                          alt="Clima"
-                          className="w-16 h-16 mx-auto"
-                        />
-                      )}
-                      <p className="text-sm">
-                        <span className="text-blue-200">Mín: {Math.round(item.temp_min)}°C</span> |
-                        <span className="text-red-200"> Máx: {Math.round(item.temp_max)}°C</span>
-                      </p>
-                    </div>
-                  ))}
+                <h2 className="text-2xl font-bold mb-4 uppercase">Próximos dias</h2>
+                <div className="flex justify-center overflow-x-auto pb-2 md:overflow-visible">
+                  <div className="flex gap-3 min-w-max">
+                    {forecast.map((item) => (
+                      <div 
+                        key={item.date} 
+                        className="bg-white/10 rounded-2xl p-3 text-center hover:bg-white/20 transition-colors w-[140px] shadow-lg border border-white/10 backdrop-blur-sm"
+                      >
+                        <p className="font-semibold text-sm">{formatDate(item.date)}</p>
+                        {item.icon && (
+                          <img
+                            src={`https://openweathermap.org/img/wn/${item.icon}@2x.png`}
+                            alt="Clima"
+                            className="w-14 h-14 mx-auto"
+                          />
+                        )}
+                        <p className="text-xs">
+                          <span className="text-blue-200">Mín: {Math.round(item.temp_min)}°C</span> |
+                          <span className="text-red-200"> Máx: {Math.round(item.temp_max)}°C</span>
+                        </p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             )}
