@@ -35,7 +35,7 @@ export default function CityList({ cities, onCityClick }: CityListProps) {
         const updatedHistory = prev.filter((city) => city.name !== newCity.name);
 
         // Adiciona a nova cidade no topo e mantém apenas as últimas 5
-        const newHistory = [newCity, ...updatedHistory].slice(0, 5);
+        const newHistory = [newCity, ...updatedHistory].slice(0, 6);
 
         // Salva no localStorage
         localStorage.setItem("weatherHistory", JSON.stringify(newHistory));
@@ -46,31 +46,30 @@ export default function CityList({ cities, onCityClick }: CityListProps) {
   }, [cities]);
 
   return (
-    <div className="bg-white/20 backdrop-blur-lg rounded-xl p-6 shadow-lg">
-      <h2 className="text-2xl font-bold mb-4 text-white">Histórico de Pesquisas</h2>
+    <div className="bg-white/20 backdrop-blur-lg rounded-xl p-4 md:p-3 shadow-lg">
+      <h2 className="text-xl font-bold mb-3 text-white">Histórico de Pesquisas</h2>
 
       {history.length === 0 ? (
-        <p className="text-white/70 text-center py-4">Nenhuma pesquisa recente</p>
+        <p className="text-white/70 text-center py-2">Nenhuma pesquisa recente</p>
       ) : (
         history.map((city, index) => (
           <div
             key={index}
-            className={`
-              bg-white/10 rounded-lg p-3 mb-3 flex items-center 
-              hover:bg-white/20 transition-colors cursor-pointer
-              ${index >= 3 ? 'md:hidden' : ''} // Oculta o 4º e 5º itens em telas médias e maiores
-            `}
+            className={"bg-white/10 rounded-lg p-2 mb-1 flex items-center hover:bg-white/20 transition-colors cursor-pointer"}
             onClick={() => onCityClick && onCityClick(city.name)}
           >
             <img
               src={`https://openweathermap.org/img/wn/${city.icon}@2x.png`}
               alt="Ícone do clima"
-              className="w-14 h-14"
+              className="w-10 h-10 md:w-8 md:h-8"
             />
-            <div className="ml-3">
-              <h2 className="text-lg font-semibold text-white">{city.name}</h2>
-              <p className="text-xl font-bold text-white">{Math.round(city.temp)}°C</p>
-              <p className="text-sm text-white/80 capitalize">{city.description}</p>
+            <div className="ml-2">
+              <h2 className="text-base font-semibold text-white">{city.name}</h2>
+              <div className="flex items-center">
+                <p className="text-lg md:text-base font-bold text-white">{Math.round(city.temp)}°C</p>
+                <p className="text-xs text-white/80 capitalize ml-2 hidden md:block">{city.description}</p>
+              </div>
+              <p className="text-xs text-white/80 capitalize md:hidden">{city.description}</p>
             </div>
           </div>
         ))
