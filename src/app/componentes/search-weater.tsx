@@ -15,18 +15,26 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
     }
   };
 
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
+
   return (
-    <div className="flex items-center gap-2 bg-[#2c2c54] rounded-lg p-2 shadow-lg w-80">
+    <div className="relative flex items-center">
       <input
         type="text"
         placeholder="Buscar cidade..."
         value={city}
         onChange={(e) => setCity(e.target.value)}
-        className="bg-transparent outline-none text-white w-full placeholder-gray-400"
+        onKeyPress={handleKeyPress}
+        className="w-full bg-white/20 backdrop-blur-lg text-white placeholder-white/70 rounded-full py-3 px-6 pr-12 outline-none focus:ring-2 focus:ring-white/50 transition-all shadow-lg"
       />
       <button
         onClick={handleSearch}
-        className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
+        className="absolute right-3 bg-white/30 hover:bg-white/40 transition-colors rounded-full p-2 text-white"
+        aria-label="Buscar"
       >
         🔍
       </button>
