@@ -7,7 +7,7 @@ import {
 } from "./services/weater-services";
 import SearchBar from "./componentes/search-weater";
 import CityList from "./componentes/city-list";
-import { BotMessageSquare, Sun, SunMoon} from "lucide-react";
+import Turistics from "./componentes/turistics";
 
 type WeatherData = {
   name: string;
@@ -154,23 +154,32 @@ export default function Home() {
     await fetchWeatherData(city);
   };
 
-  // Função formatDate corrigida para garantir a exibição correta dos dias
+  // Função formatDate modificada para mostrar apenas o dia da semana
   const formatDate = (dateString: string) => {
     // dateString está no formato YYYY-MM-DD
     const date = new Date(dateString);
 
     const options: Intl.DateTimeFormatOptions = {
-      weekday: "short",
-      day: "numeric",
-      month: "short",
+      weekday: "long", // "long" para nome completo do dia, "short" para abreviado
     };
 
-    return date.toLocaleDateString("pt-BR", options);
+    // Formata e capitaliza a primeira letra
+    const dayOfWeek = date.toLocaleDateString("pt-BR", options);
+    return dayOfWeek.charAt(0).toUpperCase() + dayOfWeek.slice(1);
   };
 
   return (
     <div className="min-h-screen  bg-[#013a63] text-white">
       <div className="container  mx-auto px-4 py-8 max-w-6xl">
+        <div className="flex flex-col md:flex-row justify-between items-center w-full mb-6 gap-4">
+          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold font-poppins">
+            One-Climas.com
+          </h1>
+          <div className="w-full md:w-2/5 lg:w-1/3">
+            <SearchBar onSearch={handleSearch} />
+          </div>
+        </div>
+
         <div className="flex flex-col mt-6 md:flex-row gap-6 justify-center">
           {/* Coluna da esquerda: clima atual e previsão */}
           <div className="w-full md:w-2/3 max-w-3xl mx-auto">
@@ -181,30 +190,14 @@ export default function Home() {
               </div>
             )}
 
-            {/* Exibir clima atual */}
+            {/* Exibir clima atual e previsão para os próximos dias em um único card */}
             {!loading && weather && (
-              <div className="bg-white/20 backdrop-blur-lg flex flex-col justify-center items-center rounded-xl p-4 shadow-lg mb-2  ">
-                <div className="flex w-full items-center justify-between mb-2">
-                  
-                  <div className="w-10 flex justify-start border-r-2 border-white/20 pl-2">
-                    <Sun   className="cursor-pointer transform transition-transform duration-300 hover:scale-125" />
-                  </div>
-                  {/* Espaço vazio para equilibrar */}
-                  <h1 className="text-4xl font-bold font-poppins">
-                    Previsão do Tempo
-                  </h1>
-                  <div className="w-10 flex justify-end border-l-2 border-white/20 pl-2">
-                    <BotMessageSquare  className="cursor-pointer transform transition-transform duration-300 hover:scale-125" />
-                  </div>
-                </div>
-
-                <div className="max-w-md w-full mx-auto">
-                  <SearchBar onSearch={handleSearch} />
-                </div>
-                <div className="flex bg-white/10 backdrop-blur-lg rounded-xl hover:bg-white/20 transition-colors w-[450px] items-center justify-around">
+              <div className="bg-white/20 backdrop-blur-lg rounded-xl p-4 shadow-lg">
+                {/* Clima atual */}
+                <div className="flex justify-between items-center w-full mb-6">
                   <div>
-                    <h2 className="text-3xl font-bold">{weather.name}</h2>
-                    <p className="text-xl capitalize">
+                    <h2 className="text-2xl font-bold">{weather.name}</h2>
+                    <p className="capitalize">
                       {weather.weather[0].description}
                     </p>
                     <p className="text-sm mt-2">
@@ -216,52 +209,47 @@ export default function Home() {
                     <img
                       src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
                       alt={weather.weather[0].description}
-                      className="w-16 h-16"
+                      className="w-8 h-8"
                     />
-                    <p className="text-4xl font-bold">
+                    <p className="text-2xl font-bold">
                       {Math.round(weather.main.temp)}°C
                     </p>
                   </div>
                 </div>
-              </div>
-            )}
 
-            {/* Exibir previsão para os próximos dias */}
-            {!loading && forecast.length > 0 && (
-              <div className="bg-white/20 backdrop-blur-lg rounded-xl p-4 shadow-lg">
-                <h2 className="text-2xl text-center font-bold mb-4 uppercase">
-                  Próximos dias
-                </h2>
-                <div className="flex justify-center overflow-x-auto pb-2 md:overflow-visible">
-                  <div className="flex gap-3 min-w-max justify-center">
-                    {forecast.map((item) => (
-                      <div
-                        key={item.date}
-                        className="bg-white/10 rounded-2xl p-3 text-center hover:bg-white/20 transition-colors w-[140px] shadow-lg border border-white/10 backdrop-blur-sm"
-                      >
-                        <p className="font-semibold text-sm">
-                          {formatDate(item.date)}
-                        </p>
-                        {item.icon && (
-                          <img
-                            src={`https://openweathermap.org/img/wn/${item.icon}@2x.png`}
-                            alt="Clima"
-                            className="w-14 h-14 mx-auto"
-                          />
-                        )}
-                        <p className="text-xs flex flex-col">
-                          <span className="text-blue-200">
-                            Mín: {Math.round(item.temp_min)}°C
-                          </span>{" "}
-                          <span className="text-red-200">
-                            {" "}
-                            Máx: {Math.round(item.temp_max)}°C
-                          </span>
-                        </p>
-                      </div>
-                    ))}
+                {/* Previsão para os próximos dias */}
+                {forecast.length > 0 && (
+                  <div className="flex justify-center overflow-x-auto pb-2 md:overflow-visible">
+                    <div className=" bg-white/10 flex gap-3 justify-center">
+                      {forecast.map((item) => (
+                        <div
+                          key={item.date}
+                          className="relative bg-white/10 rounded-br-full p-3 text-center hover:bg-white/20 transition-colors w-[140px] shadow-lg border border-white/10 backdrop-blur-sm after:content-[''] after:absolute after:inset-1 after:rounded-br-full after:bg-gradient-to-tr after:from-cyan-500/10 after:to-purple-500/10 after:-z-10 before:content-[''] before:absolute before:inset-0 before:rounded-br-full before:bg-blue-400/5 before:-z-20"
+                        >
+                          <p className="font-semibold text-sm">
+                            {formatDate(item.date)}
+                          </p>
+                          {item.icon && (
+                            <img
+                              src={`https://openweathermap.org/img/wn/${item.icon}@2x.png`}
+                              alt="Clima"
+                              className="w-14 h-14 mx-auto"
+                            />
+                          )}
+                          <p className="text-xs flex flex-col font-semibold">
+                            <span className="text-blue-200  ">
+                              Mín: {Math.round(item.temp_min)}°C
+                            </span>{" "}
+                            <span className="text-red-200  ">
+                              {" "}
+                              Máx: {Math.round(item.temp_max)}°C
+                            </span>
+                          </p>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             )}
           </div>
@@ -285,6 +273,7 @@ export default function Home() {
             />
           </div>
         </div>
+        <Turistics />
       </div>
     </div>
   );
